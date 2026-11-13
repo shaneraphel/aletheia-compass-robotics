@@ -1,0 +1,35 @@
+{"runtime_launcher": "managed-torch-with-local-libero-v1", "cached_package_distributions": 205, "robosuite_numba_disabled": true, "python": "/Users/<user>/Library/Application Support/kimi-desktop/daimon-share/daimon/runtime/python/.venv/bin/python", "torch": "2.14.1", "torch_file": "/Users/<user>/Library/Application Support/kimi-desktop/daimon-share/daimon/runtime/python/.venv/lib/python3.12/site-packages/torch/__init__.py", "numpy": "2.4.4", "numpy_file": "/Users/<user>/Library/Application Support/kimi-desktop/daimon-share/daimon/runtime/python/.venv/lib/python3.12/site-packages/numpy/__init__.py", "mps_available": true, "libero_source": "<workspace>/fieldrt/upstream/libero-sparse", "fallback_site_packages": "<workspace>/fieldrt/upstream/lerobot-venv-local/lib/python3.12/site-packages"}
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+WARNING:robosuite_logs:No private macro file found!
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+WARNING:robosuite_logs:It is recommended to use a private macro file
+[robosuite WARNING] To setup, run: python <workspace>/fieldrt/upstream/lerobot-venv-local/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+WARNING:robosuite_logs:To setup, run: python <workspace>/fieldrt/upstream/lerobot-venv-local/lib/python3.12/site-packages/robosuite/scripts/setup_macros.py
+Gym has been unmaintained since 2022 and does not support NumPy 2.0 amongst other critical functionality.
+Please upgrade to Gymnasium, the maintained drop-in replacement of Gym, or contact the authors of your software and request that they upgrade.
+See the migration guide at https://gymnasium.farama.org/introduction/migration_guide/ for additional information.
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+[Warning]: datasets path <workspace>/fieldrt/upstream/libero-sparse/libero/datasets does not exist!
+[Warning]: datasets path <workspace>/fieldrt/upstream/libero-sparse/libero/datasets does not exist!
+{
+  "schema": "aletheia-libero-in-loop-independent-replay-v1",
+  "verified": true,
+  "policy_loaded": false,
+  "policy_inference_performed": false,
+  "mathematical_controller_loaded": false,
+  "init_state": 6,
+  "actions": 91,
+  "replayed_check_success": true,
+  "recorded_check_success": true,
+  "all_observation_hashes_verified": true,
+  "all_action_delta_identities_verified": true,
+  "corrected_action_float32_roundtrip_max_abs": 1.1920928955078125e-07,
+  "corrected_action_float32_roundtrip_max_bound": 3.658794867078541e-07,
+  "float32_epsilon": 1.1920928955078125e-07,
+  "corrected_action_float32_roundtrip_bound": "eps*(abs(raw)+abs(delta)) elementwise",
+  "nonzero_delta_actions": 91,
+  "trajectory_bytes": 3713266,
+  "trajectory_sha256": "4cf9b8bc8c716a95b38f87ff3addc284aef27154c61044dfe7c00c60f981ab88",
+  "wall_seconds": 3.479054917001122,
+  "single_episode_not_success_rate": true
+}

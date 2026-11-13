@@ -1,0 +1,78 @@
+{
+  "schema": "aletheia-libero-in-loop-compass-pinekf-v1",
+  "init_state": 16,
+  "task": "pick_up_the_black_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate",
+  "language": "pick up the black bowl between the plate and the ramekin and place it on the plate",
+  "goal_state": [
+    [
+      "on",
+      "akita_black_bowl_1",
+      "plate_1"
+    ]
+  ],
+  "status": "complete_failed",
+  "check_success": false,
+  "first_check_success_step": null,
+  "actions_executed": 220,
+  "policy_inference_calls": 185,
+  "official_spatial_action_limit": 220,
+  "phases": {
+    "orient": 9,
+    "approach": 44,
+    "descend": 19,
+    "close": 18,
+    "lift": 11,
+    "open_recovery": 15,
+    "transport": 104
+  },
+  "controller": "Real-time point-cloud Gram + I/II/S + foci + PineKF + secular/trapped bands + skew ultrametric exits",
+  "ground_truth_object_positions_used_for_control": false,
+  "force_sensor_available": false,
+  "force_closure_claimed": false,
+  "mathematical_actions_nonzero": 220,
+  "delta_action_l2_sum": 224.65104533731937,
+  "policy": {
+    "checkpoint": "<workspace>/fieldrt/models/smolvla_libero",
+    "revision": "a24f1f380461b665158d52acd140152c79e8b36d",
+    "weights_sha256": "9a9f6413e42c0f332fccbce9a0dc796af2790f82cf002f791cdbf7e01e1afca8",
+    "policy_chunk_size": 50,
+    "policy_n_action_steps": 50,
+    "actions_consumed_per_inference": 1,
+    "action_queue_used": false,
+    "resize_imgs_with_padding": [
+      512,
+      512
+    ],
+    "image_mapping": {
+      "observation.images.camera1": "upright agentview_image",
+      "observation.images.camera2": "upright robot0_eye_in_hand_image"
+    },
+    "model_load_seconds_this_invocation": 6.988056291998873
+  },
+  "timings_this_invocation_seconds": {
+    "model_load": 7.458623708000232,
+    "inference": 102.48417854200488,
+    "geometry": 27.825292242003343,
+    "physics": 12.427797126983933,
+    "serialization": 47.83421783101221,
+    "replay": 0.0003906660003849538
+  },
+  "completed_invocation_wall_seconds_sum": 201.47628375000022,
+  "run_count": 1,
+  "trajectory_file": "<workspace>/fieldrt/results/libero_geometry_control_v1/aletheia_grip_site_frame_init16/trajectory.pt",
+  "baseline_comparison": {
+    "original_smolvla_chunk4_init2": {
+      "actions": 220,
+      "check_success": false,
+      "evidence": "fieldrt/results/libero_chunk4_v1/smolvla_chunk4_seed7_init2/report.json"
+    },
+    "this_controller": {
+      "actions": 220,
+      "check_success": false
+    }
+  },
+  "single_episode_not_success_rate": true,
+  "leaderboard_claim": false,
+  "dexterous_hand_or_force_control_claim": false,
+  "final_independent_replay": null
+}

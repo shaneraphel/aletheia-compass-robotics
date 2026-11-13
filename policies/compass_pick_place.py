@@ -223,6 +223,45 @@ class CompassPickPlace:
                 setattr(self, name, float(state[name]))
         self.quotient_flip = bool(state.get("quotient_flip", False))
 
+    def restore_episode_evidence(self, rows: list[dict[str, Any]]) -> dict[str, Any]:
+        """Restore pre-current-observation entities from the committed trajectory.
+
+        Each row stores the two PineKF updates and metric path immediately before
+        its action. Replaying physics reaches the observation after the last row;
+        restoring the last row's pre-action entities and assimilating that final
+        observation once is therefore identical to rebuilding every historical
+        geometry update, without repeating those O(T) surface constructions.
+        """
+        if not rows:
+            raise ValueError("Episode-evidence restore requires at least one committed row")
+        restored_from: dict[str, int] = {}
+        for name in self.names:
+            for row in reversed(rows):
+                updates = row["math"]["targets"][name]["pinekf"]
+                valid = [update for update in updates if update.get("valid")]
+                if valid:
+                    self.filters[name].restore(valid[-1])
+                    restored_from[name] = int(row["step"])
+                    break
+            else:
+                raise ValueError(f"No committed valid PineKF entity for {name}")
+        # state[:3] is only float32 and must not be promoted as a counterfeit
+        # float64 path. The committed path entity retains the original float64
+        # observations immediately before the last action; restore those exactly.
+        path_entity = rows[-1]["math"]["path"].get("entity")
+        if not path_entity or "observations" not in path_entity:
+            raise ValueError("Fast resume requires the committed float64 MetricPath observations")
+        positions = [np.asarray(position, dtype=np.float64)
+                     for position in np.asarray(path_entity["observations"], dtype=np.float64)]
+        self.path.restore(positions)
+        return {
+            "mode": "committed_entity_restore_plus_one_current_assimilation",
+            "pinekf_source_steps": restored_from,
+            "metric_path_source_step": int(rows[-1]["step"]),
+            "metric_path_committed_positions_before_current": len(self.path.eef),
+            "historical_surface_assimilations_skipped": len(rows),
+        }
+
     def _advance_phase(self) -> None:
         if not self.initialized:
             return

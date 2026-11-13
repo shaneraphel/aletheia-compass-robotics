@@ -235,9 +235,21 @@ def main() -> None:
         controller = CompassPickPlace(env)
         if metadata.get("controller_state"):
             controller.restore(metadata["controller_state"])
-        started = time.perf_counter()
-        controller.assimilate(obs)
-        timings["geometry"] += time.perf_counter()-started
+        # Inspection of an arbitrary historical row still uses full assimilation.
+        # Ordinary resume restores the last committed mathematical entities and
+        # assimilates only the final replayed observation, avoiding O(T^2) work
+        # across repeated timeout/resume invocations.
+        committed_path = rows[-1]["math"]["path"].get("entity") if rows else None
+        fast_entity_restore = bool(
+            rows and args.inspect_replay_step < 0
+            and committed_path and "observations" in committed_path)
+        entity_restore = {"mode": "full_historical_geometry_assimilation"}
+        if fast_entity_restore:
+            entity_restore = controller.restore_episode_evidence(rows)
+        else:
+            started = time.perf_counter()
+            controller.assimilate(obs)
+            timings["geometry"] += time.perf_counter()-started
         if args.inspect_geometry:
             if rows or not controller.initialized:
                 raise RuntimeError("Initial geometry inspection requires a fresh observable episode")
@@ -261,6 +273,7 @@ def main() -> None:
             print(json.dumps(inspection, indent=2), flush=True)
             return
         replay_started = time.perf_counter()
+        replay_geometry_started = timings["geometry"]
         resume_agentview_hash_mismatches = []
         for row in rows:
             obs, replay_reward, replay_done, _ = env.step(np.asarray(row["executed_action"]).tolist())
@@ -281,9 +294,10 @@ def main() -> None:
                     "sensor_hashes": differences, "committed_done": row["done"],
                     "replayed_done": bool(replay_done), "committed_success": row["check_success"],
                     "replayed_success": bool(env.check_success())}))
-            geometry_started = time.perf_counter()
-            controller.assimilate(obs)
-            timings["geometry"] += time.perf_counter()-geometry_started
+            if not fast_entity_restore:
+                geometry_started = time.perf_counter()
+                controller.assimilate(obs)
+                timings["geometry"] += time.perf_counter()-geometry_started
             if row["step"] == args.inspect_replay_step:
                 robot = controller.latest["robot"]
                 source = controller.latest["geometry"]["targets"][controller.source]
@@ -334,14 +348,20 @@ def main() -> None:
                                 base.upright(obs["robot0_eye_in_hand_image"]))
                 print(json.dumps(plain(inspection), indent=2), flush=True)
                 return
+        if fast_entity_restore:
+            geometry_started = time.perf_counter()
+            controller.assimilate(obs)
+            timings["geometry"] += time.perf_counter()-geometry_started
         base.atomic_json(output / "resume_replay_verification.json", {
             "schema": "aletheia-libero-resume-replay-v1", "committed_steps_replayed": len(rows),
             "physics_and_non_agentview_hashes_verified": True,
             "all_observation_hashes_verified": not resume_agentview_hash_mismatches,
             "agentview_rgb_only_mismatches": resume_agentview_hash_mismatches,
+            "controller_entity_restore": entity_restore,
             "strict_independent_replay_remains_required": True,
         })
-        timings["replay"] = time.perf_counter()-replay_started-timings["geometry"]
+        timings["replay"] = (time.perf_counter()-replay_started
+                             -(timings["geometry"]-replay_geometry_started))
         if rows and (rows[-1]["check_success"] or rows[-1]["done"] or len(rows) >= LIMIT):
             raise RuntimeError("Episode is already complete")
 

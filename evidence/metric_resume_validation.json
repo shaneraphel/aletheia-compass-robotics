@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "gram_routes": {
+    "small_random_cases": 16,
+    "blocked_vs_dense_max_abs": 1.4210854715202004e-14,
+    "gram_dual_route_max_abs": 3.552713678800501e-15
+  },
+  "large_surface": {
+    "points": 9000,
+    "seconds": 1.8570477079992997,
+    "blocks": 36,
+    "gram_dual_route_max_abs": 5.204170427930421e-18
+  },
+  "committed_resume": {
+    "trajectory": "fieldrt/release/aletheia-compass-robotics/evidence/init3_19/init4/trajectory.pt",
+    "committed_rows": 90,
+    "resume_checkpoints": 7,
+    "pinekf_restore_max_abs": 0.0,
+    "metric_path_entity_max_abs": 0.0
+  }
+}

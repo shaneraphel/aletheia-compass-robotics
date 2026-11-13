@@ -5,8 +5,11 @@
   "absolute_orientation_max_abs": 0.0,
   "rigid_place_identity_max_abs": 2.220446049250313e-16,
   "world_transport_geodesic_max_abs": 7.105427357601002e-15,
-  "gram_dual_route_max_abs": 4.0657581468206416e-20,
-  "spectral_direct_sum_max_abs": 1.7763568394002505e-15,
-  "weld_inverse_max_abs": 1.160175216338436e-19,
-  "compass_roundtrip_max_abs": 2.168404344971009e-19
+  "randomized_surface_charts": 20,
+  "left_handed_svd_charts_repaired": 13,
+  "surface_chart_orthonormality_max_abs": 6.661338147750939e-16,
+  "gram_dual_route_max_abs": 2.710505431213761e-20,
+  "spectral_direct_sum_max_abs": 8.951173136040325e-16,
+  "weld_inverse_max_abs": 3.725664876909753e-20,
+  "compass_roundtrip_max_abs": 0.0
 }

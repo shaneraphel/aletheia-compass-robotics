@@ -10,6 +10,7 @@ import torch
 
 from aletheia_absolute_kinematics import absolute_orientation, metric_grasp_targets
 from aletheia_grasp_frame import parallel_jaw_rotation
+from aletheia_metric_control import quadratic_surface
 from metric_entities import metric_entity
 
 
@@ -74,6 +75,21 @@ def main() -> None:
         np.testing.assert_allclose(mapped["rotation"], alternate if alternate_angle < primary_angle else primary,
                                    rtol=0, atol=1e-12)
 
+    left_handed_svd_charts = 0
+    maximum_chart_orthonormality = 0.0
+    for _ in range(20):
+        points = rng.normal(size=(128, 3))@rotation(rng)
+        _, _, raw_vh = np.linalg.svd(points-points.mean(axis=0), full_matrices=False)
+        left_handed_svd_charts += int(np.linalg.det(raw_vh.T) < 0.0)
+        chart = quadratic_surface(points)
+        basis = np.asarray(chart["basis"])
+        determinant = float(np.linalg.det(basis))
+        orthonormality = float(np.max(np.abs(basis.T@basis-np.eye(3))))
+        maximum_chart_orthonormality = max(maximum_chart_orthonormality, orthonormality)
+        assert abs(determinant-1.0) < 1e-12
+        assert orthonormality < 1e-12
+    assert left_handed_svd_charts > 0, "The SVD sign repair branch was not exercised"
+
     increments = rng.normal(scale=0.003, size=(12, 3))
     trajectory = torch.from_numpy(np.cumsum(increments, axis=0)).to(torch.float64)
     entity = metric_entity(trajectory, None)
@@ -82,6 +98,9 @@ def main() -> None:
         "absolute_orientation_max_abs": maximum_orientation_identity,
         "rigid_place_identity_max_abs": maximum_place_identity,
         "world_transport_geodesic_max_abs": maximum_geodesic_identity,
+        "randomized_surface_charts": 20,
+        "left_handed_svd_charts_repaired": left_handed_svd_charts,
+        "surface_chart_orthonormality_max_abs": maximum_chart_orthonormality,
         "gram_dual_route_max_abs": float(entity["gram_dual_route_max_abs"]),
         "spectral_direct_sum_max_abs": float(entity["spectral_direct_sum_max_abs"]),
         "weld_inverse_max_abs": float(entity["weld_inverse_max_abs"]),

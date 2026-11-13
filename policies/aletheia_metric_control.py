@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -96,6 +95,52 @@ def camera_cloud(env: Any, obs: dict[str, np.ndarray], camera: str,
     }
 
 
+def gram_dual_route(xc: np.ndarray, block_size: int = 256) -> dict[str, Any]:
+    """Verify coordinate and squared-distance Gram routes in bounded memory.
+
+    For D_ij=||x_i-x_j||^2 and J=I-11^T/n, use
+    -JDJ/2=-(D-1*d_col^T-d_row*1^T+mean(D))/2 elementwise. The row/column
+    means and grand mean are evaluated algebraically from coordinate sums;
+    each block still constructs D independently from pairwise distances.
+    Thus the check remains a dual-route identity, without an O(n^3) J@D@J
+    product or persistent n-by-n arrays.
+    """
+    xc = np.asarray(xc, dtype=np.float64)
+    if xc.ndim != 2 or xc.shape[1] != 3 or len(xc) == 0:
+        raise ValueError("Gram dual route requires an [n,3] centered coordinate array")
+    if block_size < 1:
+        raise ValueError("Gram block size must be positive")
+    n = len(xc)
+    norms = np.einsum("ij,ij->i", xc, xc)
+    coordinate_sum = xc.sum(axis=0)
+    # mean_j D_ij = ||x_i||^2 + mean_j||x_j||^2
+    #               - 2*x_i @ sum_j(x_j)/n. The column mean is identical.
+    distance_row_mean = norms+norms.mean()-2*(xc@coordinate_sum)/n
+    distance_mean = 2*norms.mean()-2*float(coordinate_sum@coordinate_sum)/(n*n)
+    maximum_error = 0.0
+    finite = True
+    blocks = 0
+    for start in range(0, n, block_size):
+        stop = min(n, start+block_size)
+        coordinate_gram = xc[start:stop]@xc.T
+        distances = np.maximum(
+            norms[start:stop, None]+norms[None, :]-2*coordinate_gram, 0.0)
+        dual_gram = -0.5*(distances-distance_row_mean[start:stop, None]
+                          -distance_row_mean[None, :]+distance_mean)
+        finite = finite and bool(np.isfinite(coordinate_gram).all()
+                                 and np.isfinite(distances).all()
+                                 and np.isfinite(dual_gram).all())
+        maximum_error = max(maximum_error, float(np.abs(coordinate_gram-dual_gram).max()))
+        blocks += 1
+    return {
+        "gram_dual_route_max_abs": maximum_error,
+        "gram_dual_route_blocks": blocks,
+        "gram_dual_route_block_size": min(block_size, n),
+        "gram_dual_route_finite": finite,
+        "gram_dual_route_storage": "O(block_size*n), no persistent n-by-n arrays",
+    }
+
+
 def quadratic_surface(points: np.ndarray) -> dict[str, Any]:
     """Closed-form local graph, fundamental forms, shape spectrum and foci.
 
@@ -112,6 +157,12 @@ def quadratic_surface(points: np.ndarray) -> dict[str, Any]:
     xc = points - center
     _, singular, vh = np.linalg.svd(xc, full_matrices=False)
     basis = vh.T
+    # SVD signs are arbitrary: vh.T is orthogonal but may have determinant -1.
+    # Choose the normal sign once so every downstream graph, shape operator and
+    # grasp frame shares the same right-handed SO(3) chart. Recompute local
+    # coordinates after this convention; never relax the SO(3) consumer check.
+    if np.linalg.det(basis) < 0.0:
+        basis[:, -1] *= -1.0
     local = xc @ basis
     u, v, z = local.T
     # Scale the chart by its own measured RMS radius. This is an exact change
@@ -153,11 +204,7 @@ def quadratic_surface(points: np.ndarray) -> dict[str, Any]:
     parameters = np.array([p, q, a, b, c, dn*chart_scale])
     focus = [1/float(k) if abs(k) > np.finfo(np.float64).eps * max(1., abs(mean)) else None
              for k in principal]
-    gram = xc @ xc.T
-    diagonal = np.diag(gram)
-    distances = np.maximum(diagonal[:, None] + diagonal[None, :] - 2*gram, 0)
-    centering = np.eye(len(points)) - np.ones((len(points), len(points))) / len(points)
-    dual_gram = -0.5 * centering @ distances @ centering
+    gram_check = gram_dual_route(xc)
     result = {
         "valid": True, "count": len(points), "center": center, "basis": basis,
         "minimum": points.min(axis=0), "maximum": points.max(axis=0),
@@ -171,13 +218,13 @@ def quadratic_surface(points: np.ndarray) -> dict[str, Any]:
         "gaussian_curvature": gaussian, "mean_curvature": mean,
         "principal_curvatures": principal, "parallel_surface_foci_metres": focus,
         "shape_spectrum_identity_max_abs": spectrum_identity,
-        "gram_coordinate_route": gram, "gram_distance_route": dual_gram,
-        "gram_dual_route_max_abs": float(np.abs(gram-dual_gram).max()),
+        **gram_check,
     }
     scalar_values = [gaussian, mean, variance, spectrum_identity, result["gram_dual_route_max_abs"]]
-    array_values = [parameters, parameter_covariance, shape, directions, principal, gram, dual_gram]
-    if not all(math.isfinite(float(value)) for value in scalar_values) or not all(
-            np.isfinite(value).all() for value in array_values):
+    array_values = [parameters, parameter_covariance, shape, directions, principal]
+    if (not gram_check["gram_dual_route_finite"]
+            or not all(math.isfinite(float(value)) for value in scalar_values)
+            or not all(np.isfinite(value).all() for value in array_values)):
         raise FloatingPointError(f"Non-finite differential surface entity: scale={chart_scale}, "
                                  f"range={np.ptp(points, axis=0)}, singular={singular}, "
                                  f"graph={parameters}")
@@ -315,6 +362,22 @@ class PineKF:
                 self.P-(residual@P_predicted@residual.T+K@R@K.T)).max()),
         }
 
+    def restore(self, evidence: dict[str, Any]) -> None:
+        """Restore the exact committed filter entity, not an approximate refit."""
+        if not evidence.get("valid"):
+            raise ValueError("PineKF restore requires a valid committed update")
+        x = np.asarray(evidence["state"], dtype=np.float64)
+        covariance = np.asarray(evidence["covariance"], dtype=np.float64)
+        innovation = np.asarray(evidence["innovation"], dtype=np.float64)
+        updates = int(evidence["updates"])
+        if (x.shape != (6,) or covariance.shape != (6, 6) or innovation.shape != (3,)
+                or updates < 1 or not all(np.isfinite(value).all() for value in (x, covariance, innovation))):
+            raise ValueError("Invalid committed PineKF state, covariance, innovation, or update count")
+        self.x = x.copy()
+        self.P = covariance.copy()
+        self.previous_innovation = innovation.copy()
+        self.updates = updates
+
 
 def ultrametric_phase(residual: np.ndarray, tangent_hint: np.ndarray,
                       uncertainty: float) -> dict[str, Any]:
@@ -357,9 +420,16 @@ class MetricPath:
         self._metric_function = None
 
     def _load_metric(self):
-        # The GPL release contains the measured metric operators directly; it
-        # never imports the private Aletheia language-model runtime.
+        # Public release: local mathematical operators only.
         return metric_entity
+
+    def restore(self, positions: list[np.ndarray]) -> None:
+        """Restore the bounded metric path from committed proprioceptive states."""
+        restored = [np.asarray(position, dtype=np.float64) for position in positions]
+        if (not restored or any(position.shape != (3,) or not np.isfinite(position).all()
+                                for position in restored)):
+            raise ValueError("MetricPath restore requires finite committed [x,y,z] states")
+        self.eef = [position.copy() for position in restored[-self.limit:]]
 
     def append(self, eef: np.ndarray, uncertainty: float = 0.0) -> dict[str, Any]:
         self.eef.append(np.asarray(eef, dtype=np.float64).copy())

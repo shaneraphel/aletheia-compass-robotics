@@ -1,0 +1,22 @@
+{
+  "schema": "aletheia-libero-in-loop-independent-replay-v1",
+  "verified": true,
+  "policy_loaded": false,
+  "policy_inference_performed": false,
+  "mathematical_controller_loaded": false,
+  "init_state": 6,
+  "actions": 91,
+  "replayed_check_success": true,
+  "recorded_check_success": true,
+  "all_observation_hashes_verified": true,
+  "all_action_delta_identities_verified": true,
+  "corrected_action_float32_roundtrip_max_abs": 1.1920928955078125e-07,
+  "corrected_action_float32_roundtrip_max_bound": 3.658794867078541e-07,
+  "float32_epsilon": 1.1920928955078125e-07,
+  "corrected_action_float32_roundtrip_bound": "eps*(abs(raw)+abs(delta)) elementwise",
+  "nonzero_delta_actions": 91,
+  "trajectory_bytes": 3713266,
+  "trajectory_sha256": "4cf9b8bc8c716a95b38f87ff3addc284aef27154c61044dfe7c00c60f981ab88",
+  "wall_seconds": 3.479054917001122,
+  "single_episode_not_success_rate": true
+}
