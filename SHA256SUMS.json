@@ -1,0 +1,158 @@
+{
+  "schema": "aletheia-compass-release-manifest-v1",
+  "license": "GPL-3.0-only",
+  "selected_successful_episodes": 1,
+  "selected_initial_states": [
+    2
+  ],
+  "successful_actions": 87,
+  "independent_replay_verified": true,
+  "all_observation_hashes_verified": true,
+  "mathematics_participated_in_control": true,
+  "post_hoc_math_presented_as_control": false,
+  "original_smolvla_weights_included": false,
+  "aletheia_mother_or_private_weights_included": false,
+  "derivative_weights_included": false,
+  "trained_small_model_included": false,
+  "benchmark_success_rate_claim": false,
+  "leaderboard_claim": false,
+  "autonomous_aletheia_repair_claim": false,
+  "files": {
+    ".gitignore": {
+      "bytes": 104,
+      "sha256": "e67a7cf3ee9b80eeb5f21f94196c2404cdc3acec1f928ccec03308466e28b793"
+    },
+    "LICENSE": {
+      "bytes": 35149,
+      "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+    },
+    "README.md": {
+      "bytes": 5408,
+      "sha256": "53bed0b9d991595c0bb6f89cdd29624d7601fea51fa67a023fc9313f677fe86f"
+    },
+    "THIRD_PARTY.md": {
+      "bytes": 828,
+      "sha256": "c1bebc661f9bbd7a0f0828a87322bfa7c57e6b878575caf8dd07edf3b5435275"
+    },
+    "environment.json": {
+      "bytes": 774,
+      "sha256": "2412807b604517723437f6d08c5b7e102774390bf0ded53fe14e03a3c82604a9"
+    },
+    "evidence/baseline_init2/reference_receipt.json": {
+      "bytes": 766,
+      "sha256": "0a68ec6630c759a419728b7cc3cc1502a03a1d860a6477d689484e7a8b46a335"
+    },
+    "evidence/init2/fast_run.log": {
+      "bytes": 48069,
+      "sha256": "de3a2c1ceb5c26cd76f81ac61206405d05bbf1a8bde01df32a8566712fd5c230"
+    },
+    "evidence/init2/independent_replay_verification.json": {
+      "bytes": 897,
+      "sha256": "c6b948c23c8add24ad0c962e2b5abc4b8dcd26b93411a7d010b346a8e4fadac8"
+    },
+    "evidence/init2/inloop_figure_receipt.json": {
+      "bytes": 384,
+      "sha256": "78fe6dbe5e07c9bd4b5f93566f2fe3e1b2659e307c172109aec5eda7202d092d"
+    },
+    "evidence/init2/latest_agentview.png": {
+      "bytes": 63811,
+      "sha256": "31aa78343f9ecaa7612409bf3c1948ddb31cf3a6793c53a47880f2b421ea208d"
+    },
+    "evidence/init2/latest_wrist.png": {
+      "bytes": 66054,
+      "sha256": "088a9d0e0921711fe83e837997d8bd91c0b4440416c7569ce0ecaba77984e142"
+    },
+    "evidence/init2/recorded_report.json": {
+      "bytes": 3532,
+      "sha256": "c43f8f77925b384d342dbc54d0d8b55f4fe7f3874d10ee34e2c96661536a1847"
+    },
+    "evidence/init2/replay_final_agentview.png": {
+      "bytes": 63811,
+      "sha256": "31aa78343f9ecaa7612409bf3c1948ddb31cf3a6793c53a47880f2b421ea208d"
+    },
+    "evidence/init2/replay_final_wrist.png": {
+      "bytes": 66054,
+      "sha256": "088a9d0e0921711fe83e837997d8bd91c0b4440416c7569ce0ecaba77984e142"
+    },
+    "evidence/init2/strict_replay.log": {
+      "bytes": 2908,
+      "sha256": "e23fd3c027507ab156bc8ccc2d9c4d1d60b30e6c81aeb8a6e57d446cb47608a5"
+    },
+    "evidence/init2/trajectory.pt": {
+      "bytes": 3502450,
+      "sha256": "d4aa0c7edb483839196bcaad238ec76f9aead5cd5f38d5f2804946673f9a7e9b"
+    },
+    "evidence/public_geometry_validation.json": {
+      "bytes": 488,
+      "sha256": "93fb9f112ffacba1d104a78b218c4f20d7c5a7b1e02a201bbf79994e62e013c4"
+    },
+    "evidence/public_strict_replay.log": {
+      "bytes": 2109,
+      "sha256": "856a5076f68d2a8f1eeaeae8fe93cb8818bbdb915780e8ad95e818d38bb3e8fd"
+    },
+    "figures/inloop_mathematics.png": {
+      "bytes": 345050,
+      "sha256": "afbe196a4f4884170055a58dfdcc8ce778e0a147a98d998b03804cade2cf5d79"
+    },
+    "figures/inloop_mathematics.pt": {
+      "bytes": 15261,
+      "sha256": "615a1a47efd73f149cda2febb5a763e2f48bebf18cce0d613ac04d8c07d1bb1d"
+    },
+    "policies/__pycache__/aletheia_absolute_kinematics.cpython-312.pyc": {
+      "bytes": 5177,
+      "sha256": "0cdbcaf6881941ca278e48d84dc043e05b5d2916d090fb69670bad50ceee99b5"
+    },
+    "policies/__pycache__/aletheia_grasp_frame.cpython-312.pyc": {
+      "bytes": 6501,
+      "sha256": "573ad00177cd37db6fac7308510f2440b3dd185f60184e37f8745d09b3f34d62"
+    },
+    "policies/__pycache__/aletheia_metric_control.cpython-312.pyc": {
+      "bytes": 28543,
+      "sha256": "eadd423606634cbf29cb60d1cf8c3eba94c45e66ea3ce620b42096fb9c9c63ab"
+    },
+    "policies/__pycache__/compass_pick_place.cpython-312.pyc": {
+      "bytes": 28719,
+      "sha256": "4d12e8224b156b2be1d201bdd073904479272a71b5ff30380d37e437fef72879"
+    },
+    "policies/__pycache__/libero_smolvla_episode.cpython-312.pyc": {
+      "bytes": 32858,
+      "sha256": "7c1e701ede5155fdfd4abb62030cc56ec4c12b806cdf84649684cb44b191a0d3"
+    },
+    "policies/__pycache__/metric_entities.cpython-312.pyc": {
+      "bytes": 17509,
+      "sha256": "168c2e10937a0f9b217642e7766f292df9ea659c3923fd98857fa84e20347714"
+    },
+    "policies/aletheia_absolute_kinematics.py": {
+      "bytes": 3807,
+      "sha256": "890d70bfb6f6d8ac3e1bfcbfc87ec0d075f5b5e34974ed4049e45503a4c586c3"
+    },
+    "policies/aletheia_grasp_frame.py": {
+      "bytes": 4623,
+      "sha256": "db662325ac6abeac492232a795d5c580f39526161687fcd8bd07b9b0dc473955"
+    },
+    "policies/aletheia_metric_control.py": {
+      "bytes": 18215,
+      "sha256": "9bd5f6e4db9a265bd7f3cb0b6eec26de6408e08adca0e271802c487506ad5ed6"
+    },
+    "policies/compass_pick_place.py": {
+      "bytes": 20523,
+      "sha256": "3b2c1fc98d3d1a4f70722542a2baf4ecf0d9fe05dc36d7e18f308eda0dcb6381"
+    },
+    "policies/libero_compass_episode.py": {
+      "bytes": 27684,
+      "sha256": "6f01f8f0a16d0cb48b4b46ecacb11f66feadc48c5e7bbc46b58027b4bf8dfdf1"
+    },
+    "policies/libero_smolvla_episode.py": {
+      "bytes": 23591,
+      "sha256": "6d950f95f9c4c600b6de059974520b77420a6884804b8d791f108f959682e247"
+    },
+    "policies/metric_entities.py": {
+      "bytes": 12397,
+      "sha256": "2bc22eb2ed378c3ebe3782fbaa0a74dafa1a641ed6f5c55abdcc2927382d8fa8"
+    },
+    "policies/validate_compass_release.py": {
+      "bytes": 4811,
+      "sha256": "a588aac9c159abc2b59e0966b8c6f7622c88db035702be6a08b1fe75f8d2bae8"
+    }
+  }
+}

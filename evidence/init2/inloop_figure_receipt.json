@@ -1,0 +1,18 @@
+{
+  "participated_in_control": true,
+  "post_hoc_measurement_only": false,
+  "actions": 87,
+  "phases": [
+    "orient",
+    "approach",
+    "descend",
+    "close",
+    "lift",
+    "transport",
+    "place"
+  ],
+  "nonzero_delta_actions": 87,
+  "maximum_gram_dual_route_error": 4.128641872824801e-16,
+  "figure": "inloop_mathematics.png",
+  "tensor_entities": "inloop_mathematics.pt"
+}

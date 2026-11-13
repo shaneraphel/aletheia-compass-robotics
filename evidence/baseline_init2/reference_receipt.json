@@ -1,0 +1,17 @@
+{
+  "schema": "aletheia-compass-baseline-reference-v1",
+  "controller": "official SmolVLA chunk-4 throughput baseline; no Aletheia geometric control",
+  "init_state": 2,
+  "seed": 7,
+  "actions": 220,
+  "policy_inference_calls": 55,
+  "recorded_check_success": false,
+  "replayed_check_success": false,
+  "independent_observation_hashes_verified": true,
+  "trajectory_bytes": 87903003,
+  "trajectory_sha256": "b78e806104d202613f587e2e778e377e5f6e15632fa98a352797b23a17146d37",
+  "weights_sha256": "9a9f6413e42c0f332fccbce9a0dc796af2790f82cf002f791cdbf7e01e1afca8",
+  "full_baseline_trajectory_included": false,
+  "reason": "The success package does not redistribute the 88 MB original-policy trajectory or any original weights.",
+  "post_hoc_math_included": false
+}
