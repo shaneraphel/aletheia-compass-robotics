@@ -33,6 +33,10 @@ The model-side realization used measured cotangent entities, a joint dual-cell m
 
 The result does not establish improvement on other prompts, FATE-X, FrontierMath Erdős, CLEVER, robotics, or any public leaderboard.
 
+## Donor composition with a preserved coding manifold
+
+A subsequent nonzero donor readout was constrained by the joint minimum-Frobenius condition \(Z_{\mathrm{fit}}\Delta W^\top=\Gamma\) and \(Z_{\mathrm{code}}\Delta W^\top=0\). A separate official-forward generation preserved all 617 token IDs and passed the same unchanged tests again. The joint solve has numerical rank 1985, language relative residual 5.950311484273215e-07, and coding maximum absolute residual 2.7082213892044155e-08. See [`../code_nullspace_donor/`](../code_nullspace_donor/) for the formula, measurements, and lightweight verification. The additional private donor tensors are not distributed; the public layer-26 increment below independently regenerates the preserved candidate.
+
 ## Verify in seconds
 
 Only Python and NumPy are needed:
