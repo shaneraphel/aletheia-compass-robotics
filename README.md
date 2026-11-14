@@ -107,6 +107,8 @@ evaluated through independent row blocks and global distance moments. The weight
 
 The mathematical target and weight-realization procedure were specified upstream; the code tokens themselves were then generated freely by the derivative model without supervisor editing. This is direct evidence of model-generated operator synthesis on the released task.
 
+A further donor-readout composition solved a joint minimum-Frobenius constraint on the language cotangent and the successful coding states. In an independent fresh-process gate, the composite path preserved all 617 token IDs and passed the unchanged tests again. The joint solve had numerical rank 1985, language relative residual `5.950311484273215e-07`, and coding maximum absolute residual `2.7082213892044155e-08`. See [`evidence/code_nullspace_donor/`](evidence/code_nullspace_donor/) for verification. The additional donor tensors remain private; the public layer-26 increment still regenerates the preserved candidate.
+
 Fast executable verification:
 
 ```bash
