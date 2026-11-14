@@ -1,0 +1,15 @@
+{
+  "phase": "forged",
+  "passed": true,
+  "exit_code": 0,
+  "parsed": {
+    "passed": true,
+    "random_block_cases": 16,
+    "maximum_dense_or_blocked_identity_error": 1.5987211554602254e-14,
+    "invalid_input_contracts_passed": true
+  },
+  "stderr": "",
+  "wall_seconds": 0.33106291700096335,
+  "supervisor_code_written": false,
+  "candidate_sha256": "95c9ab974748271ae5679c15e53601e7513c25593579a6578b0874c34c7cf4ab"
+}

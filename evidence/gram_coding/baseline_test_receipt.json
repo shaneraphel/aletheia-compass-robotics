@@ -1,0 +1,13 @@
+{
+  "phase": "official",
+  "passed": false,
+  "exit_code": 1,
+  "parsed": {
+    "passed": false,
+    "traceback": "Traceback (most recent call last):\n  File \"<workspace>/fieldrt/results/aletheia_live_v1/official_tests.py\", line 22, in <module>\n    result = module.blocked_gram_dual_route(points, block_size)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<workspace>/fieldrt/results/aletheia_live_v1/gram_coding_ab_conditional_fp32_v1/official.candidate.py\", line 19, in blocked_gram_dual_route\n    raise ValueError(\"Invalid input type for points.\")\nValueError: Invalid input type for points.\n"
+  },
+  "stderr": "",
+  "wall_seconds": 0.22163720800017472,
+  "supervisor_code_written": false,
+  "candidate_sha256": "f3f4565d3e371d0252dbf3880dbfe7bc86faceb597f8278a7d700c1e78c287b1"
+}

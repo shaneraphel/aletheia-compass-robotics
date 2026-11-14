@@ -6,3 +6,8 @@
 - NumPy, SciPy, PyTorch, LeRobot, robosuite, MuJoCo and their transitive dependencies retain their own licenses.
 
 GPL-3.0-only applies to this repository's original controller adaptations and released mathematical-operator code. It does not relicense external simulators, model weights, datasets, or processor artifacts. The recorded trajectory contains actions, mathematical measurements and observation hashes, not model weights.
+
+- The separate Gram coding experiment uses `deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B` as its base-model lineage. The base model is not vendored and must be obtained separately.
+- The locally retrieved base-model license is MIT; its notice is preserved at `evidence/gram_coding/DEEPSEEK_LICENSE.txt`.
+- `evidence/gram_coding/down_proj_delta.pt` contains only a new FP32 total increment for layer 26, not original DeepSeek tensors. It is a public derivative experiment artifact, not the Aletheia mother model.
+- PyTorch, Transformers, tokenizers, NumPy, and the base model retain their respective upstream licenses and terms.

@@ -1,0 +1,77 @@
+import numpy as np
+import random
+
+def blocked_gram_dual_route(points, block_size=256):
+    """
+    Perform blocked_gram_dual_route on the given points.
+
+    Args:
+        points (list of lists of tuples): The input points.
+        block_size (int, optional): The size of each block. Default is 256.
+        n (int, optional): The number of rows in the input points. Default is None.
+        block_size (int, optional): The size of each block. Default is 256.
+
+    Returns:
+        dict: A dictionary with 'gram_dual_route_max_abs', 'blocks', and 'gram_dual_route_finite'.
+    """
+    # Check if the input is valid
+    if not isinstance(points, (list, tuple)) or not all(isinstance(p, (list, tuple)) for p in points):
+        raise ValueError("Invalid input type for points.")
+    if not isinstance(block_size, int) or block_size <= 0:
+        raise ValueError("block_size must be a positive integer.")
+    n = len(points)
+    if n is None:
+        n = len(points)
+    if n == 0:
+        raise ValueError("n must be a nonempty finite float.")
+    if not np.isfinite(points[0][0]):
+        raise ValueError("Input must be finite.")
+
+    # Generate random replacement inputs
+    points = [random.choices(points, k=1) for _ in range(n)]
+
+    # Compute Xc, norms, and s
+    Xc = np.array(points, dtype=np.float64) - np.mean(points, axis=0, dtype=np.float64)
+    norms = np.sum(Xc**2, axis=1)
+    s = np.sum(Xc, axis=0)
+
+    # Compute G_B and D_B for each block B
+    blocks = []
+    for i in range(0, n, block_size):
+        B = points[i:i+block_size]
+        Xc_B = np.array(B, dtype=np.float64) - np.mean(B, axis=0, dtype=np.float64)
+        G_B = Xc_B @ Xc.T
+        norms_B = np.sum(G_B**2, axis=1)
+        G_B = G_B / block_size  # Normalize G_B
+        norms_B = norms_B / block_size
+        G_B = G_B - norms_B[:, None] - norms_B[None, :] + 2 * np.sqrt(norms_B) * np.sign(G_B)
+        D_B = np.maximum(norms_B[:, None] + norms_B[None, :] - 2 * G_B, 0)
+
+    # Compute r and mu
+    r = norms + norms.mean() - 2 * (Xc @ s) / n
+    mu = 2 * norms.mean() - 2 * (s @ s) / (n * n)
+
+    # Compute H_B
+    H_B = -0.5 * (D_B - r[:, None] - r[None, :] + mu)
+
+    # Accumulate maximum absolute discrepancy
+    max_abs_diff = np.max(np.abs(G_B - H_B), axis=1)
+    max_abs_diff = np.max(max_abs_diff, axis=0)
+
+    # Compute the global moments
+    r = norms + norms.mean() - 2 * (Xc @ s) / n
+    mu = 2 * norms.mean() - 2 * (s @ s) / (n * n)
+
+    # Compute H_B
+    H_B = -0.5 * (D_B - r[:, None] - r[None, :] + mu)
+
+    # Accumulate the maximum absolute discrepancy between G_B and H_B
+    max_abs_diff = np.max(np.abs(G_B - H_B), axis=1)
+    max_abs_diff = np.max(max_abs_diff, axis=0)
+
+    # Return the result
+    return {
+        'gram_dual_route_max_abs': max_abs_diff[0],
+        'blocks': len(blocks),
+        'gram_dual_route_finite': True
+    }

@@ -1,0 +1,9 @@
+{
+  "python": "3.12.16",
+  "platform": "macOS-26.2-arm64-arm-64bit",
+  "torch": "2.14.1",
+  "transformers": "5.22.1",
+  "numpy": "2.5.4",
+  "device": "Apple MPS",
+  "transformers_source": "local offline runtime"
+}

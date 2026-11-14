@@ -1,0 +1,51 @@
+import numpy as np
+import random
+
+def blocked_gram_dual_route(points, block_size=256):
+    """
+    Perform blocked_gram_dual_route on the given points.
+
+    Args:
+        points (list of lists of tuples): The input points.
+        block_size (int, optional): The size of each block. Default is 256.
+    
+    Returns:
+        dict: A dictionary with 'gram_dual_route_max_abs', 'blocks', and 'gram_dual_route_finite'.
+    """
+    x = np.asarray(points, dtype=np.float64)
+    n = x.shape[0]
+    m = x.shape[1]
+    
+    # Check if the input is valid
+    if x.ndim != 2 or x.shape[1] != 3 or x.shape[0] == 0 or (not np.isfinite(x).all()):
+        raise ValueError('points must be a nonempty finite float64 array with shape (n, 3)')
+    
+    # Compute Xc, norms, and s
+    xc = x - x.mean(axis=0)
+    norms = np.sum(xc ** 2, axis=1)
+    s = np.sum(xc, axis=0)
+    
+    # Check if block_size is positive
+    if isinstance(block_size, (bool, np.bool_)) or not isinstance(block_size, (int, np.integer)):
+        raise ValueError('block_size must be a positive integer')
+    if block_size < 1:
+        raise ValueError('block_size must be a positive integer')
+    block_size = int(block_size)
+    gram_dual_route_max_abs = 0.0
+    gram_dual_route_finite = True
+    blocks = 0
+    r = norms + norms.mean() - 2.0 * (xc @ s) / n
+    mu = 2.0 * norms.mean() - 2.0 * (s @ s) / (n * n)
+    for i in range(0, n, block_size):
+        stop = min(i + block_size, n)
+        g_b = xc[i:stop] @ xc.T
+        d_b = np.maximum(norms[i:stop, None] + norms[None, :] - 2.0 * g_b, 0.0)
+        h_b = -0.5 * (d_b - r[i:stop, None] - r[None, :] + mu)
+        gram_dual_route_finite = gram_dual_route_finite and bool(np.isfinite(g_b).all() and np.isfinite(d_b).all() and np.isfinite(h_b).all())
+        gram_dual_route_max_abs = max(gram_dual_route_max_abs, float(np.max(np.abs(g_b - h_b))))
+        blocks += 1
+    return {
+        'gram_dual_route_max_abs': gram_dual_route_max_abs,
+        'blocks': blocks,
+        'gram_dual_route_finite': gram_dual_route_finite
+    }

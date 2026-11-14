@@ -1,0 +1,24 @@
+{
+  "schema": "aletheia-public-gram-reproduction-v1",
+  "generated_tokens": 617,
+  "max_new_tokens": 1024,
+  "stopped_on_exact_period": null,
+  "matches_frozen_candidate": true,
+  "claim_boundary": "Exact candidate reproduction on the recorded software and MPS environment; other environments require fresh validation.",
+  "test_receipt": {
+    "passed": true,
+    "exit_code": 0,
+    "parsed": {
+      "passed": true,
+      "random_block_cases": 16,
+      "maximum_dense_or_blocked_identity_error": 1.5987211554602254e-14,
+      "invalid_input_contracts_passed": true
+    },
+    "stderr": "",
+    "wall_seconds": 0.18539637500362005,
+    "candidate_sha256": "95c9ab974748271ae5679c15e53601e7513c25593579a6578b0874c34c7cf4ab",
+    "official_tests_sha256": "d59b18597bd5d023921accae28168d8f485265777e06c8764bc7bc453fdae7b4",
+    "supervisor_code_written": false
+  },
+  "public_delta_sha256": "4e7913f516cde7e5064eecdcb9e57e0e23ca6139f8839ee78a42d9ce84169f7b"
+}

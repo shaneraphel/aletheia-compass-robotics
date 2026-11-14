@@ -1,0 +1,14 @@
+<｜begin▁of▁sentence｜><｜User｜>Implement one complete Python function blocked_gram_dual_route(points, block_size=256).
+Think and respond in English. Return only executable Python code continuing the already-open fence.
+Use stdlib and numpy only. Require a nonempty finite float64 n-by-3 input and a positive integer block_size;
+raise ValueError otherwise. Let Xc=X-X.mean(axis=0), norms=sum(Xc**2,axis=1), and s=Xc.sum(axis=0).
+For every row block B independently form G_B=B@Xc.T with shape (b,n), and
+D_B=max(norms_B[:,None]+norms[None,:]-2G_B,0). Derive the global moments
+r=norms+norms.mean()-2*(Xc@s)/n and mu=2*norms.mean()-2*(s@s)/(n*n), then form
+H_B=-0.5*(D_B-r_B[:,None]-r[None,:]+mu). Accumulate the maximum absolute elementwise
+discrepancy between G_B and H_B. Return exactly a dict with float
+'gram_dual_route_max_abs', integer 'blocks', and boolean 'gram_dual_route_finite'.
+Do not construct np.eye(n), a full N-by-N Gram matrix, or J@D@J. Do not hardcode test
+values, generate random replacement inputs, or use candidate scoring. Write the complete
+function, not a plan. Every positive integer block size is valid, including block_size>n.<｜Assistant｜></think>
+```python
